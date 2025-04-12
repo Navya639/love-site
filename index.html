@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To Ayush, With Love</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #fff0f5;
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    h1, h2 {
+      font-family: 'Pacifico', cursive;
+      color: #d6336c;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem;
+      text-align: center;
+      position: relative;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 1rem;
+      z-index: 100;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.5rem;
+      margin: 0 1rem;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #ff69b4;
+    }
+
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: #fff0f5;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      font-family: 'Pacifico', cursive;
+      font-size: 2rem;
+      color: #ff69b4;
+      animation: fadeOut 2s ease 3s forwards;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    .game-section {
+      background-color: #fff0f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #gameCanvas {
+      border: 2px solid #d6336c;
+      background: #ffe6f0;
+      touch-action: none;
+    }
+
+    .controls {
+      margin-top: 1rem;
+    }
+
+    .controls button {
+      background: #ff69b4;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      margin: 0 0.5rem;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .controls button:hover {
+      background-color: #e055a3;
+    }
+
+    .poem {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.5rem;
+      color: #d6336c;
+      background: rgba(255,255,255,0.8);
+      padding: 2rem;
+      border-radius: 20px;
+      margin: 2rem;
+      max-width: 700px;
+      animation: fadeIn 3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .countdown {
+      font-size: 2rem;
+      color: #ff007f;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    .love-bar {
+      width: 75%;
+      height: 20px;
+      background: #ff69b4;
+      margin-top: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .love-bar-fill {
+      width: 75%;
+      height: 100%;
+      background: #ff007f;
+      border-radius: 10px;
+    }
+
+    .secret-button {
+      background: #ff69b4;
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 2rem;
+      transition: background 0.3s ease;
+    }
+
+    .secret-button:hover {
+      background: #e055a3;
+    }
+
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      z-index: 9999;
+      transition: transform 0.3s ease;
+      text-align: center;
+      color: #d6336c;
+      font-family: 'Pacifico', cursive;
+    }
+
+    .popup.active {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .gallery img {
+      width: 200px;
+      height: 200px;
+      margin: 10px;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.1);
+    }
+
+    footer {
+      background: #ff69b4;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      margin-top: 1rem;
+      display: inline-block;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #ff007f;
+    }
+
+    /* Circle Image */
+    .profile-img {
+      border-radius: 50%;
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border: 5px solid #ff69b4;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Loading Love Screen -->
+  <div class="loading-screen">Loading love...</div>
+
+  <!-- Navigation Bar -->
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#countdown">Countdown</a>
+    <a href="#poem">Poem</a>
+    <a href="#game">Game</a>
+    <a href="#lovebar">Love Bar</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#footer">Contact</a>
+  </nav>
+
+  <!-- Home Section -->
+  <section id="home">
+    <h1>Welcome Baby ❤️</h1>
+    <p>Uk Uk this is my cute little baby.😗😗</p>
+    <img src="your-image.jpg" alt="Ayush's photo" class="profile-img">
+  </section>
+
+  <!-- Countdown Section -->
+  <section id="countdown">
+    <h2>Birthday Countdown 🎂</h2>
+    <div class="countdown" id="countdown-timer">Loading...</div>
+  </section>
+
+  <!-- Poem Section -->
+  <section id="poem">
+    <h2>A Poem for You</h2>
+    <div class="poem">
+      Your smile, your voice, your loving heart, <br/>
+      From you, I never want to part. <br/>
+      With every beat, with every sigh, <br/>
+      I’ll love you more till the day I die.
+    </div>
+    <button class="secret-button" onclick="showSecret()">Click Me 💌</button>
+    <div class="popup" id="popup">Thank you for never giving up on me. I will always love you more and more. 💖</div>
+  </section>
+
+  <!-- Game Section -->
+  <section id="game" class="game-section">
+    <h2>Catch the Hearts 💖</h2>
+    <canvas id="gameCanvas" width="320" height="500"></canvas>
+    <div class="controls">
+      <button onclick="moveLeft()">⬅️</button>
+      <button onclick="moveRight()">➡️</button>
+    </div>
+  </section>
+
+  <!-- Love Bar Section -->
+  <section id="lovebar">
+    <h2>Our Love Progress ❤️</h2>
+    <div class="love-bar">
+      <div class="love-bar-fill"></div>
+    </div>
+    <p>The rest will be completed after marriage 💍</p>
+  </section>
+
+  <!-- Love Quiz Section -->
+  <section id="quiz">
+    <h2>Love Quiz 💖</h2>
+    <div class="quiz-container">
+      <form id="quizForm">
+        <label for="q1">1. Will you be mine forever?Yes/No 😗😗</label>
+        <input type="text" id="q1" name="q1">
+        <br>
+        <button type="button" onclick="checkAnswers(event)">Submit</button>
+      </form>
+      <p id="quizResult"></p>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section id="gallery">
+    <h2>Our Memories 💫</h2>
+    <div class="gallery">
+      <img src="memory1.jpg" alt="Memory 1">
+      <img src="memory2.jpg" alt="Memory 2">
+      <img src="memory3.jpg" alt="Memory 3">
+      <img src="memory4.jpg" alt="Memory 4">
+    </div>
+  </section>
+
+  <!-- Footer Section (Contact) -->
+  <footer id="footer">
+    <h2>Made with ❤️ by your baby</h2>
+    <p>Batao kaisi lagi 😗</p>
+    <a href="https://www.instagram.com/jatishay21?igsh=c21hbXJkMW94cnBz" target="_blank">ispe click kro aur magic dekho 😗</a>
+  </footer>
+
+  <script>
+    // Countdown Timer
+    const countdownDate = new Date("April 27, 2025 00:00:00").getTime();
+    const countdownElement = document.getElementById('countdown-timer');
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = countdownDate - now;
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+      if (distance < 0) {
+        countdownElement.innerHTML = "Happy Birthday, Ayush! 🎉";
+      }
+    }
+    setInterval(updateCountdown, 1000);
+
+    // Secret Popup
+    function showSecret() {
+      const popup = document.getElementById('popup');
+      popup.classList.add('active');
+      setTimeout(() => popup.classList.remove('active'), 5000);
+    }
+
+    // Love Quiz
+    function checkAnswers(event) {
+      event.preventDefault();
+      const q1 = document.getElementById('q1').value.toLowerCase();
+      let result = '';
+
+      if (q1 === "yes") {
+        result = 'I knew it, I Love you janeman ❤️😗';
+      } else {
+        result = 'You broke My heart 😭';
+      }
+
+      document.getElementById('quizResult').innerText = result;
+    }
+
+    // Game Logic (Hearts as shapes)
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    let basket = { x: canvas.width / 2 - 40, y: canvas.height - 60, width: 80, height: 20 };
+    let hearts = [];
+    let gameInterval;
+    let gameOver = false;
+
+    function startGame() {
+      hearts = [];
+      basket.x = canvas.width / 2 - 40;
+      gameOver = false;
+      gameInterval = setInterval(gameLoop, 20);
+      setTimeout(endGame, 30000);  // End game after 30 seconds
+    }
+
+    function endGame() {
+      gameOver = true;
+      clearInterval(gameInterval);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ff69b4';
+      ctx.font = '30px Pacifico';
+      ctx.fillText('Maje aye na❤️😂', canvas.width / 2 - 150, canvas.height / 2);
+    }
+
+    function drawHeart(x, y, size) {
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.bezierCurveTo(x - size, y - size, x - size, y + size, x, y + size);
+      ctx.bezierCurveTo(x + size, y + size, x + size, y - size, x, y);
+      ctx.fillStyle = '#ff007f';
+      ctx.fill();
+    }
+
+    function moveLeft() {
+      if (basket.x > 0) basket.x -= 15;
+    }
+
+    function moveRight() {
+      if (basket.x + basket.width < canvas.width) basket.x += 15;
+    }
+
+    function gameLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (!gameOver) {
+        for (let i = 0; i < hearts.length; i++) {
+          const heart = hearts[i];
+          heart.y += heart.speed;
+          drawHeart(heart.x, heart.y, 10);
+          if (heart.y + 10 > basket.y && heart.x > basket.x && heart.x < basket.x + basket.width) {
+            hearts.splice(i, 1); // Remove heart
+          }
+        }
+
+        if (Math.random() < 0.02) {
+          hearts.push({ x: Math.random() * canvas.width, y: -10, speed: Math.random() * 2 + 2 });
+        }
+
+        ctx.fillStyle = '#ff007f';
+        ctx.fillRect(basket.x, basket.y, basket.width, basket.height);
+      }
+    }
+
+    // Start game on page load
+    startGame();
+  </script>
+</body>
+</html>
